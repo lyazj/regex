@@ -20,6 +20,8 @@ typedef struct regex_node_t {
 } regex_node_t;
 
 typedef struct regex_t {
+  int n_unit;
+  int n_group;
   char *str;  /* owned */
   char *cur;
   const regex_config_t *config;

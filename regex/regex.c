@@ -8,6 +8,8 @@
 regex_t *regex_create(const regex_config_t *config, const char *s)
 {
   regex_t *regex = (regex_t *)Malloc(sizeof *regex);
+  regex->n_unit = 0;
+  regex->n_group = 0;
   regex->str = Strdup(s);
   regex->cur = regex->str;
   regex->config = config;
@@ -149,7 +151,7 @@ int parse_regex_reusable(regex_t *regex)
   }
   if(!parse_regex_unit(regex, &s)) return 0;
 
-  regex->node = regex_node_create(0);  /* [XXX] */
+  regex->node = regex_node_create(++regex->n_unit);
   regex->node->charset = s;
   return 1;
 }
@@ -162,7 +164,7 @@ int parse_regex_group(regex_t *regex)
   if(!parse_regex(regex)) return 0;
   if(!parse_regex_char(regex, ')')) return 0;
 
-  node = regex_node_create(-1);  /* [XXX] */
+  node = regex_node_create(-++regex->n_group);
   node->group = regex->node;
   regex->node = node;
   return 1;
