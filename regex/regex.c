@@ -51,8 +51,6 @@ void regex_print_node(const regex_node_t *node)
     printf("(");
     regex_print_node(node->group);
     printf(")");
-  } else if(node->type == '#') {
-    printf("\\#");
   } else {
     charset_print(&node->charset);
   }

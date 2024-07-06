@@ -15,7 +15,6 @@ regex_config_t *regex_config_create(void)
   regex_config_add_escaping_ch(config, 'r', '\r');
   regex_config_add_escaping_ch(config, 't', '\t');
   regex_config_add_escaping_ch(config, 'v', '\v');
-  regex_config_add_escaping_str(config, '#', "[]");
   return config;
 }
 

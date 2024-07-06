@@ -12,7 +12,7 @@ typedef struct regex_config_t {
 
 typedef struct regex_node_t {
   int id;
-  int type;  /* "*" | "+" | "?" | "#" */
+  int type;  /* "*" | "+" | "?" */
   charset_t charset;
   struct regex_node_t *next_cand;  /* regex "|" term */
   struct regex_node_t *next_node;  /* term factor */

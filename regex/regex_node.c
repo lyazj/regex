@@ -40,9 +40,6 @@ void regex_node_decorate(regex_node_t *node, int type)
     if(strchr("?", node->type)) { node->type = '?'; return; }
     assert(strchr("*+", node->type)); node->type = '*';
     return;
-  case '#':
-    assert(strchr("#", node->type)); node->type = '#';
-    return;
   default:
     assert(!"unsupported type");
   }
