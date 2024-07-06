@@ -12,6 +12,11 @@ static inline void charset_unset(charset_t *s, unsigned char uc)
   s->data[uc / 64] &= ~(((uint64_t)1) << (uc % 64));
 }
 
+static inline int charset_test(charset_t *s, unsigned char uc)
+{
+  return (s->data[uc / 64] >> (uc % 64)) & 1;
+}
+
 static inline void charset_empty(charset_t *s)
 {
   memset(s->data, 0, sizeof s->data);
