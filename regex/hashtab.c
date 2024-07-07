@@ -4,8 +4,9 @@
 
 typedef struct hashtab_node_t {
   struct hashtab_node_t *next;
-  char data[0];
 } hashtab_node_t;
+
+#define NODE_DATA(node)  ((char *)(node) + sizeof *(node))
 
 struct hashtab_t {
   size_t elem_size;
@@ -42,15 +43,15 @@ int hashtab_insert(hashtab_t *tab, const void *data, void **addr)
   size_t hash = tab->hashfunc(data) % tab->nbucket;
   hashtab_node_t **p;
   for(p = &tab->bucket[hash]; *p; p = &(*p)->next) {
-    if(tab->equfunc((*p)->data, data)) {  /* already exists */
-      *addr = (*p)->data;
+    if(tab->equfunc(NODE_DATA(*p), data)) {  /* already exists */
+      *addr = NODE_DATA(*p);
       return 0;
     }
   }
   /* insert */
   *p = (hashtab_node_t *)Malloc(sizeof(hashtab_node_t) + tab->elem_size);
   (*p)->next = NULL;
-  memcpy((*p)->data, data, tab->elem_size);
-  *addr = (*p)->data;
+  memcpy(NODE_DATA(*p), data, tab->elem_size);
+  *addr = NODE_DATA(*p);
   return 1;
 }
