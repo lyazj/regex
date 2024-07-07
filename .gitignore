@@ -3,3 +3,4 @@ build/
 test/*
 !test/*.c
 !test/*.h
+!test/README.md
