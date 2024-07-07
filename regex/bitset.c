@@ -6,7 +6,7 @@
 void bitset_create(bitset_t *bitset, size_t n)
 {
   bitset->n = n;
-  bitset->data = n ? (uint64_t *)Malloc(bitset_bufsize(n)) : NULL;
+  bitset->data = (uint64_t *)Malloc(bitset_bufsize(n));
 }
 
 void bitset_destroy(bitset_t *bitset)
@@ -21,10 +21,11 @@ int bitset_equ(const bitset_t *s1, const bitset_t *s2)
   assert(s1->n == s2->n);
   for(size_t i = 0; i < bitset_bufsize(s1->n) / 8; ++i) {
     if(s1->data[i] != s2->data[i]) {
+      unsigned more;
       if((i + 1) * 64 <= s1->n) return 0;
 
       /* Need to strip redundant bits. */
-      unsigned more = (i + 1) * 64 - s1->n;
+      more = (i + 1) * 64 - s1->n;
       if((s1->data[i] ^ s2->data[i]) << more) return 0;
       return 1;
     }
@@ -76,8 +77,8 @@ int bitset_get_next(const bitset_t *s, size_t *up)
 
 void bitset_print(const bitset_t *s)
 {
-  printf("[");
   size_t u;
+  printf("[");
   if(bitset_get_first(s, &u)) {
     printf("%zu", u);
     while(bitset_get_next(s, &u)) {

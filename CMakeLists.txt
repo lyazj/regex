@@ -33,7 +33,7 @@ if(ENABLE_GPROF)
     add_compile_options(${GPROF_OPTIONS})
     add_link_options(${GPROF_OPTIONS})
 endif()
-add_compile_options(-Wall -Wshadow -Wextra -Werror)
+add_compile_options(-Wall -Wshadow -Wextra -Werror -std=c99 -Dinline=__inline__ -Werror=declaration-after-statement)
 
 # 库文件生成
 file(GLOB SOURCE_FILES CONFIGURE_DEPENDS regex/*.c)
