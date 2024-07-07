@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.14)
 project(regex VERSION 0.0.1)
 
 # 设置项目包含目录、库目录和可执行文件目录
@@ -9,6 +9,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # 优化、调试和通用编译选项
+if(CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES GNU)
 option(ENABLE_SANITIZER "compile and link with sanitizing flags" OFF)
 option(ENABLE_GPROF "compile and link with gprof flags" OFF)
 if(NOT CMAKE_BUILD_TYPE)
@@ -34,14 +35,25 @@ if(ENABLE_GPROF)
     add_link_options(${GPROF_OPTIONS})
 endif()
 add_compile_options(-Wall -Wshadow -Wextra -Werror -pedantic -std=c99 -Dinline=__inline__ -Werror=declaration-after-statement)
+endif()
+if(CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES MSVC)
+    add_compile_options(/wd4146)  # unary minus operator applied to unsigned type
+endif()
 
 # 库文件生成
 option(ENABLE_SHARED "build shared library" ON)
+if(CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES MSVC)
+    set(ENABLE_SHARED OFF)  # [XXX] Current issue: .dll generated but .lib used to link
+endif()
 file(GLOB SOURCE_FILES CONFIGURE_DEPENDS regex/*.c)
 if(ENABLE_SHARED)
+if(CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES GNU)
     add_compile_definitions(ENABLE_VISIBILITY)
+endif()
     add_library(regex SHARED ${SOURCE_FILES})
+if(CMAKE_C_COMPILER_FRONTEND_VARIANT MATCHES GNU)
     target_compile_options(regex PRIVATE -fvisibility=hidden)
+endif()
 else()
     add_library(regex ${SOURCE_FILES})
 endif()

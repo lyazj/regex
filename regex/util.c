@@ -1,7 +1,7 @@
 #include "util.h"
 #include <stdlib.h>
 #include <string.h>
-#include <err.h>
+#include <stdio.h>
 
 void *Malloc(size_t n)
 {
@@ -9,7 +9,10 @@ void *Malloc(size_t n)
 
   if(n == 0) return NULL;
   ptr = malloc(n);
-  if(ptr == NULL) err(EXIT_FAILURE, "malloc");
+  if(ptr == NULL) {
+    perror("malloc");
+    exit(EXIT_FAILURE);
+  }
   return ptr;
 }
 

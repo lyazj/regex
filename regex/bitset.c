@@ -21,7 +21,7 @@ int bitset_equ(const bitset_t *s1, const bitset_t *s2)
   assert(s1->n == s2->n);
   for(size_t i = 0; i < bitset_bufsize(s1->n) / 8; ++i) {
     if(s1->data[i] != s2->data[i]) {
-      unsigned more;
+      size_t more;
       if((i + 1) * 64 <= s1->n) return 0;
 
       /* Need to strip redundant bits. */
@@ -43,7 +43,7 @@ int bitset_cmp(const bitset_t *s1, const bitset_t *s2)
       uint64_t ux;
       if((i + 1) * 64 > s1->n) {
         /* Need to strip redundant bits. */
-        unsigned more = (i + 1) * 64 - s1->n;
+        size_t more = (i + 1) * 64 - s1->n;
         u1 <<= more;
         u2 <<= more;
       }
