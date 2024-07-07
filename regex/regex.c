@@ -76,8 +76,6 @@ void regex_print_poses(const regex_t *regex)
     bitset_print(&regex->node->firstpos);
     printf("\tlastpos=");
     bitset_print(&regex->node->lastpos);
-    printf("\tfollowpos=");
-    bitset_print(&regex->node->followpos);
     printf("\n");
   }
   for(int i = 1; i <= regex->nunit; ++i) {

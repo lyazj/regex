@@ -111,7 +111,7 @@ int main(void)
   printf("\n");
   regex_destroy(regex);
 
-  regex = regex_create(config, "([0-9](\\.[0-9]*)?|\\.[0-9]+)([eE][+\\-][0-9]+)?");
+  regex = regex_create(config, "[+\\-]?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)([eE][+\\-]?[0-9]+)?");
   assert(regex_compile(regex, 0));
   regex_print_compiled_expr(regex);
   printf("\n");
@@ -120,7 +120,7 @@ int main(void)
   regex_destroy(regex);
 
   assert(regex_config_add_escaping_str(config, 'd', "[0-9]"));
-  regex = regex_create(config, "(\\d(\\.\\d*)?|\\.\\d+)([eE][+\\-]\\d+)?");
+  regex = regex_create(config, "[+\\-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+\\-]?\\d+)?");
   assert(regex_compile(regex, 0));
   regex_print_compiled_expr(regex);
   printf("\n");

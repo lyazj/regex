@@ -66,11 +66,22 @@ int charset_get_unique(const charset_t *s, unsigned char *ucp)
 void charset_print_char(unsigned char uc)
 {
   if(!isprint(uc)) {
-    printf("\\%o", uc);
+    printf("\\%03o", uc);
   } else if(strchr("\\-[].*+?|()", uc)) {
     printf("\\%c", uc);
   } else {
     printf("%c", uc);
+  }
+}
+
+static void charset_print_range(unsigned char first, unsigned char last)
+{
+  if(first == last) {
+    charset_print_char(first);
+  } else {
+    charset_print_char(first);
+    if(first + 1 != last) printf("-");
+    charset_print_char(last);
   }
 }
 
@@ -81,9 +92,21 @@ void charset_print(const charset_t *s)
   if(charset_get_unique(s, &uc)) {
     charset_print_char(uc);
   } else {
+    unsigned first, last = -1;
     printf("[");
-    if(charset_get_first(s, &uc)) charset_print_char(uc);
-    while(charset_get_next(s, &uc)) charset_print_char(uc);
+    if(charset_get_first(s, &uc)) do {
+      if(last == (unsigned)-1) {  /* init */
+        first = last = uc;
+      } else if(uc == last + 1) {  /* coalesce */
+        last = uc;
+      } else {  /* non-contiguous */
+        charset_print_range(first, last);
+        first = last = uc;
+      }
+    } while(charset_get_next(s, &uc));
+    if(last != (unsigned)-1) {
+      charset_print_range(first, last);
+    }
     printf("]");
   }
 }
