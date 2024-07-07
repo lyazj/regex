@@ -33,7 +33,7 @@ if(ENABLE_GPROF)
     add_compile_options(${GPROF_OPTIONS})
     add_link_options(${GPROF_OPTIONS})
 endif()
-add_compile_options(-Wall -Wshadow -Wextra -Werror -std=c99 -Dinline=__inline__ -Werror=declaration-after-statement)
+add_compile_options(-Wall -Wshadow -Wextra -Werror -pedantic -std=c99 -Dinline=__inline__ -Werror=declaration-after-statement)
 
 # 库文件生成
 option(ENABLE_SHARED "build shared library" ON)

@@ -1,4 +1,3 @@
-#pragma once
 /*
  * Meta-characters:
  *   \: escape character
@@ -40,9 +39,11 @@
  * Other than explicitly specified, '\0' is not considered as a part of
  * accepting characters for any pattern.
  */
+#pragma once
+#include "charset.h"
+
 typedef struct regex_t regex_t;
 typedef struct regex_config_t regex_config_t;
-typedef struct charset_t charset_t;
 
 #ifdef ENABLE_VISIBILITY
 #pragma GCC visibility push(default)

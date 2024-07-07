@@ -3,9 +3,9 @@
 #include "charset.h"
 #include "bitset.h"
 
-typedef struct regex_config_t {
+struct regex_config_t {
   charset_t escape[256];
-} regex_config_t;
+};
 
 typedef struct regex_node_t {
   int id;
@@ -20,7 +20,7 @@ typedef struct regex_node_t {
   bitset_t followpos;
 } regex_node_t;
 
-typedef struct regex_t {
+struct regex_t {
   int nunit;
   int ngroup;
   int nclass;
@@ -31,7 +31,7 @@ typedef struct regex_t {
   regex_node_t **units;
   regex_node_t **groups;
   unsigned char *char_class;
-} regex_t;
+};
 
 regex_node_t *regex_node_create(int id);
 void regex_node_destroy(regex_node_t *);

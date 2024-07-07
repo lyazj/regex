@@ -53,9 +53,17 @@ static inline void charset_diff(const charset_t *s1, const charset_t *s2, charse
   }
 }
 
+#ifdef ENABLE_VISIBILITY
+#pragma GCC visibility push(default)
+#endif  /* ENABLE_VISIBILITY */
+
 unsigned charset_count(const charset_t *s);
 int charset_get_first(const charset_t *s, unsigned char *ucp);
 int charset_get_next(const charset_t *s, unsigned char *ucp);
 int charset_get_unique(const charset_t *s, unsigned char *ucp);
 void charset_print_char(unsigned char uc);
 void charset_print(const charset_t *s);
+
+#ifdef ENABLE_VISIBILITY
+#pragma GCC visibility pop
+#endif  /* ENABLE_VISIBILITY */
