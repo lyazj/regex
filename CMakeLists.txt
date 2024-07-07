@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(icb VERSION 0.0.1)
+project(regex VERSION 0.0.1)
 
 # 设置项目包含目录、库目录和可执行文件目录
 include_directories(${PROJECT_SOURCE_DIR})
@@ -36,8 +36,15 @@ endif()
 add_compile_options(-Wall -Wshadow -Wextra -Werror -std=c99 -Dinline=__inline__ -Werror=declaration-after-statement)
 
 # 库文件生成
+option(ENABLE_SHARED "build shared library" ON)
 file(GLOB SOURCE_FILES CONFIGURE_DEPENDS regex/*.c)
-add_library(regex SHARED ${SOURCE_FILES})
+if(ENABLE_SHARED)
+    add_compile_definitions(ENABLE_VISIBILITY)
+    add_library(regex SHARED ${SOURCE_FILES})
+    target_compile_options(regex PRIVATE -fvisibility=hidden)
+else()
+    add_library(regex ${SOURCE_FILES})
+endif()
 
 # 可执行文件生成
 file(GLOB SOURCE_FILES CONFIGURE_DEPENDS test/*.c)

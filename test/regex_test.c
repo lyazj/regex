@@ -1,3 +1,4 @@
+#undef NDEBUG
 #include "regex/regex.h"
 #include <assert.h>
 #include <stdio.h>

@@ -1,3 +1,4 @@
+#undef NDEBUG
 #include "regex/bitset.h"
 #include <stdio.h>
 
@@ -38,3 +39,8 @@ int main(void)
   printf("\n");
   return 0;
 }
+
+#ifdef ENABLE_VISIBILITY
+#include "regex/bitset.c"
+#include "regex/util.c"
+#endif  /* ENABLE_VISIBILITY */

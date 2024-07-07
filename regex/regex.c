@@ -35,7 +35,7 @@ void regex_destroy(regex_t *regex)
 
 int regex_compile(regex_t *regex, int flags)
 {
-  assert(flags == 0);  /* [TODO] */
+  if(flags) return 0;  /* [TODO] */
 
   regex->cur = regex->str;
   if(!parse_regex(regex)) return 0;

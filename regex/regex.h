@@ -1,5 +1,4 @@
 #pragma once
-
 /*
  * Meta-characters:
  *   \: escape character
@@ -45,6 +44,10 @@ typedef struct regex_t regex_t;
 typedef struct regex_config_t regex_config_t;
 typedef struct charset_t charset_t;
 
+#ifdef ENABLE_VISIBILITY
+#pragma GCC visibility push(default)
+#endif  /* ENABLE_VISIBILITY */
+
 regex_t *regex_create(const regex_config_t *, const char *);
 void regex_destroy(regex_t *);
 regex_config_t *regex_config_create(void);
@@ -60,3 +63,7 @@ void regex_config_add_escaping_ch(regex_config_t *, unsigned char, unsigned char
 int regex_config_add_escaping_str(regex_config_t *, unsigned char, const char *);
 void regex_config_add_subex(regex_config_t *, const char *id, regex_t *);
 int regex_config_add_subex_str(regex_config_t *, const char *id, const char *);
+
+#ifdef ENABLE_VISIBILITY
+#pragma GCC visibility pop
+#endif  /* ENABLE_VISIBILITY */
