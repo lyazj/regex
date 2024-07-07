@@ -72,6 +72,7 @@ static inline void bitset_diff(const bitset_t *s1, const bitset_t *s2, bitset_t 
   }
 }
 
+size_t bitset_hash(const bitset_t *s);
 int bitset_equ(const bitset_t *s1, const bitset_t *s2);
 int bitset_cmp(const bitset_t *s1, const bitset_t *s2);
 int bitset_get_first(const bitset_t *s, size_t *up);

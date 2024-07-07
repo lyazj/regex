@@ -12,6 +12,7 @@ regex_t *regex_create(const regex_config_t *config, const char *s)
   regex->nunit = 0;
   regex->ngroup = 0;
   regex->nclass = 0;
+  regex->nstate = 0;
   regex->str = Strdup(s);
   regex->cur = regex->str;
   regex->config = config;
@@ -19,12 +20,20 @@ regex_t *regex_create(const regex_config_t *config, const char *s)
   regex->units = NULL;
   regex->groups = NULL;
   regex->char_class = NULL;
+  regex->class_char = NULL;
+  regex->states = NULL;
+  regex->state_trans = NULL;
   return regex;
 }
 
 void regex_destroy(regex_t *regex)
 {
   if(regex == NULL) return;
+  if(regex->state_trans) for(int i = 0; i < regex->nstate; ++i) Free(regex->state_trans[i]);
+  Free(regex->state_trans);
+  if(regex->states) for(int i = 0; i < regex->nstate; ++i) bitset_destroy(&regex->states[i]);
+  Free(regex->states);
+  Free(regex->class_char);
   Free(regex->char_class);
   Free(regex->groups);
   Free(regex->units);
@@ -43,6 +52,7 @@ int regex_compile(regex_t *regex, int flags)
   regex_build_index(regex);
   regex_compute_poses(regex);
   regex_make_char_class(regex);
+  regex_make_states(regex);
   return 1;
 }
 
@@ -95,20 +105,70 @@ void regex_print_poses(const regex_t *regex)
   }
 }
 
-void regex_print_char_class(const regex_t *regex)
+static void regex_char_class_print(const regex_t *regex, int i)
 {
   charset_t s;
+  charset_empty(&s);
+  for(unsigned u = 0; u < 256; ++u) {
+    if(regex->char_class[u] == i) charset_set(&s, u);
+  }
+  charset_print(&s);
+}
+
+void regex_print_char_class(const regex_t *regex)
+{
   for(int i = 0; i < regex->nclass; ++i) {
-    charset_empty(&s);
-    for(unsigned u = 0; u < 256; ++u) {
-      if(regex->char_class[u] == i) {
-        charset_set(&s, u);
-      }
-    }
     printf("%d\t", i);
-    charset_print(&s);
+    regex_char_class_print(regex, i);
     printf("\n");
   }
+}
+
+void regex_print_states(const regex_t *regex)
+{
+  for(int j = 0; j <= regex->nclass; ++j) {
+    printf("\t%d", j);
+  }
+  printf("\n");
+  for(int i = 0; i < regex->nstate; ++i) {
+    printf("%d", i);
+    for(int j = 0; j <= regex->nclass; ++j) {
+      printf("\t%d", regex->state_trans[i][j]);
+    }
+    printf("\n");
+  }
+}
+
+void regex_print_states_mermaid(const regex_t *regex)
+{
+  int dead = -1;
+
+  for(int i = 0; i < regex->nstate; ++i) {
+    int isdead = 1;
+    for(int j = 0; j < regex->nclass; ++j) {
+      if(regex->state_trans[i][j] != i) { isdead = 0; break; }
+    }
+    if(regex->state_trans[i][regex->nclass] >= 0) isdead = 0;
+    if(isdead) { dead = i; break; }
+  }
+
+
+  printf("```mermaid\n");
+  printf("graph LR\n");
+  for(int i = 0; i < regex->nstate; ++i) {
+    if(i == dead) continue;
+    for(int j = 0; j < regex->nclass; ++j) {
+      if(regex->state_trans[i][j] < 0) continue;
+      if(regex->state_trans[i][j] == dead) continue;
+      printf("%d -- \"", i);
+      regex_char_class_print(regex, j);
+      printf("\" --> %d\n", regex->state_trans[i][j]);
+    }
+    if(regex->state_trans[i][regex->nclass] >= 0) {
+      printf("%d(\"%d#\")\n", i, i);
+    }
+  }
+  printf("```\n");
 }
 
 static int parse_regex_term(regex_t *);

@@ -14,3 +14,6 @@ void hashtab_destroy(hashtab_t *);
  * are copied to which *<returned-addr> points to.
  */
 int hashtab_insert(hashtab_t *, const void *data, void **addr);
+void *hashtab_find(const hashtab_t *, const void *data);
+int hashtab_get_first(const hashtab_t *, void **addr, size_t *state);
+int hashtab_get_next(const hashtab_t *, void **addr, size_t *state);

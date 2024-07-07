@@ -65,7 +65,7 @@ int charset_get_unique(const charset_t *s, unsigned char *ucp)
 
 void charset_print_char(unsigned char uc)
 {
-  if(!isprint(uc)) {
+  if(!isprint(uc) || /* for mermaid */ uc == '"') {
     printf("\\%03o", uc);
   } else if(strchr("\\-[].*+?|()", uc)) {
     printf("\\%c", uc);

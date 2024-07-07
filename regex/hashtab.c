@@ -6,7 +6,8 @@ typedef struct hashtab_node_t {
   struct hashtab_node_t *next;
 } hashtab_node_t;
 
-#define NODE_DATA(node)  ((char *)(node) + sizeof *(node))
+#define NODE_DATA(node)  ((char *)(node) + sizeof(hashtab_node_t))
+#define DATA_NODE(data)  ((hashtab_node_t *)(data) - 1)
 
 struct hashtab_t {
   size_t elem_size;
@@ -54,4 +55,41 @@ int hashtab_insert(hashtab_t *tab, const void *data, void **addr)
   memcpy(NODE_DATA(*p), data, tab->elem_size);
   *addr = NODE_DATA(*p);
   return 1;
+}
+
+void *hashtab_find(const hashtab_t *tab, const void *data)
+{
+  size_t hash = tab->hashfunc(data) % tab->nbucket;
+  for(hashtab_node_t *node = tab->bucket[hash]; node; node = node->next) {
+    if(tab->equfunc(NODE_DATA(node), data)) {
+      return NODE_DATA(node);
+    }
+  }
+  return NULL;
+}
+
+int hashtab_get_first(const hashtab_t *tab, void **addr, size_t *bp)
+{
+  *bp = (size_t)-1;
+  return hashtab_get_next(tab, addr, bp);
+}
+
+int hashtab_get_next(const hashtab_t *tab, void **addr, size_t *bp)
+{
+  size_t b = *bp;
+  hashtab_node_t *node;
+
+  if(b == (size_t)-1) {  /* init */
+    b = 0;
+    node = tab->bucket[b];
+  } else {  /* next */
+    node = DATA_NODE(*addr)->next;
+  }
+
+  while(node == NULL && ++b < tab->nbucket) {
+    node = tab->bucket[b];
+  }
+  *addr = NODE_DATA(node);
+  *bp = b;
+  return node != NULL;
 }

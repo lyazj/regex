@@ -45,6 +45,11 @@ void regex_make_char_class(regex_t *regex)
   }
   regex->nclass = lastid + 1;
 
+  regex->class_char = (unsigned char *)Malloc(regex->nclass);
+  for(unsigned i = 0; i < 256; ++i) {
+    regex->class_char[regex->char_class[i]] = i;
+  }
+
   for(unsigned i = 0; i < 256; ++i) {
     bitset_destroy(&info[i].accepted);
   }

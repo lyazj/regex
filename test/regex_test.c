@@ -132,8 +132,8 @@ int main(void)
   regex = regex_create(config, "[+\\-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+\\-]?\\d+)?");
   assert(regex_compile(regex, 0));
   regex_print_compiled_expr(regex);
-  printf("\n");
   regex_print_poses(regex);
+  regex_print_states_mermaid(regex);
   printf("\n");
   regex_destroy(regex);
 

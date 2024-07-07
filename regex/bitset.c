@@ -16,6 +16,18 @@ void bitset_destroy(bitset_t *bitset)
   bitset->data = NULL;
 }
 
+size_t bitset_hash(const bitset_t *s)
+{
+  size_t n64 = s->n / 64, m64 = s->n % 64, h = 0;
+  if(m64) {
+    h = s->data[n64] & (((uint64_t)1 << m64) - 1);
+  } else {
+    h = 0;
+  }
+  while(n64) h += s->data[--n64];  /* [XXX] */
+  return h;
+}
+
 int bitset_equ(const bitset_t *s1, const bitset_t *s2)
 {
   assert(s1->n == s2->n);
