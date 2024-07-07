@@ -6,7 +6,7 @@
 void bitset_create(bitset_t *bitset, size_t n)
 {
   bitset->n = n;
-  bitset->data = (uint64_t *)Malloc(bitset_bufsize(n));
+  bitset->data = n ? (uint64_t *)Malloc(bitset_bufsize(n)) : NULL;
 }
 
 void bitset_destroy(bitset_t *bitset)
@@ -80,9 +80,9 @@ void bitset_print(const bitset_t *s)
   size_t u;
   if(bitset_get_first(s, &u)) {
     printf("%zu", u);
-  }
-  while(bitset_get_next(s, &u)) {
-    printf(",%zu", u);
+    while(bitset_get_next(s, &u)) {
+      printf(",%zu", u);
+    }
   }
   printf("]");
 }

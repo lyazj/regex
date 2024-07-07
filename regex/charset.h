@@ -1,6 +1,10 @@
 #pragma once
-#include "regex_impl.h"
 #include <string.h>
+#include <stdint.h>
+
+typedef struct charset_t {
+  uint64_t data[4];  /* 256-long bitset */
+} charset_t;
 
 static inline void charset_set(charset_t *s, unsigned char uc)
 {

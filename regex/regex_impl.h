@@ -1,10 +1,7 @@
 #pragma once
 #include "regex.h"
-#include <stdint.h>
-
-typedef struct charset_t {
-  uint64_t data[4];  /* 256-long bitset */
-} charset_t;
+#include "charset.h"
+#include "bitset.h"
 
 typedef struct regex_config_t {
   charset_t escape[256];
@@ -12,20 +9,26 @@ typedef struct regex_config_t {
 
 typedef struct regex_node_t {
   int id;
-  int type;  /* "*" | "+" | "?" */
+  char type;  /* "*" | "+" | "?" */
+  char nullable;
   charset_t charset;
   struct regex_node_t *next_cand;  /* regex "|" term */
   struct regex_node_t *next_node;  /* term factor */
   struct regex_node_t *group;      /* "(" regex ")" */
+  bitset_t firstpos;
+  bitset_t lastpos;
+  bitset_t followpos;
 } regex_node_t;
 
 typedef struct regex_t {
-  int n_unit;
-  int n_group;
+  int nunit;
+  int ngroup;
   char *str;  /* owned */
   char *cur;
   const regex_config_t *config;
   regex_node_t *node;  /* owned */
+  regex_node_t **units;
+  regex_node_t **groups;
 } regex_t;
 
 regex_node_t *regex_node_create(int id);
@@ -37,3 +40,6 @@ int parse_regex(regex_t *);
 int parse_regex_unit(regex_t *, charset_t *);
 int parse_regex_escaped_unit(regex_t *, charset_t *);
 int parse_regex_class_escaped_unit(regex_t *, charset_t *);
+
+void regex_build_index(regex_t *);
+void regex_compute_poses(regex_t *);

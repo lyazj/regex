@@ -9,92 +9,122 @@ int main(void)
 
   regex = regex_create(config, "");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, ".");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "[.]");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "[^^]");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "\\033");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "a");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "abc");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "a|b|c");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "ab|c");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "a|bc");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "(a)");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "[a-e3]");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "[a-zA-Z_][a-zA-Z0-9_]*");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   regex = regex_create(config, "([0-9](\\.[0-9]*)?|\\.[0-9]+)([eE][+\\-][0-9]+)?");
   assert(regex_compile(regex, 0));
-  regex_print_compilation(regex);
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
   assert(regex_config_add_escaping_str(config, 'd', "[0-9]"));
   regex = regex_create(config, "(\\d(\\.\\d*)?|\\.\\d+)([eE][+\\-]\\d+)?");
-  regex_print_compilation(regex);
   assert(regex_compile(regex, 0));
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
   printf("\n");
   regex_destroy(regex);
 
