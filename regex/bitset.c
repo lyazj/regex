@@ -33,6 +33,29 @@ int bitset_equ(const bitset_t *s1, const bitset_t *s2)
   return 1;
 }
 
+int bitset_cmp(const bitset_t *s1, const bitset_t *s2)
+{
+  assert(s1->n == s2->n);
+  for(size_t i = 0; i < bitset_bufsize(s1->n) / 8; ++i) {
+    if(s1->data[i] != s2->data[i]) {
+      uint64_t u1 = s1->data[i];
+      uint64_t u2 = s2->data[i];
+      uint64_t ux;
+      if((i + 1) * 64 > s1->n) {
+        /* Need to strip redundant bits. */
+        unsigned more = (i + 1) * 64 - s1->n;
+        u1 <<= more;
+        u2 <<= more;
+      }
+      ux = u1 ^ u2;
+      if(ux == 0) return 0;
+      if(u1 & (ux & -ux)) return 1;
+      return -1;
+    }
+  }
+  return 0;
+}
+
 int bitset_get_first(const bitset_t *s, size_t *up)
 {
   for(size_t i = 0; i < bitset_bufsize(s->n) / 8; ++i) {

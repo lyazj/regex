@@ -53,6 +53,7 @@ void regex_config_destroy(regex_config_t *);
 int regex_compile(regex_t *, int flags);
 void regex_print_compiled_expr(const regex_t *);
 void regex_print_poses(const regex_t *);
+void regex_print_char_class(const regex_t *);
 
 void regex_config_add_escaping(regex_config_t *, unsigned char, const charset_t *);
 void regex_config_add_escaping_ch(regex_config_t *, unsigned char, unsigned char);

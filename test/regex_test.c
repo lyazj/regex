@@ -103,6 +103,14 @@ int main(void)
   printf("\n");
   regex_destroy(regex);
 
+  regex = regex_create(config, "[asdfghjkl]qwertyuiop[zxcvbnm]");
+  assert(regex_compile(regex, 0));
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
+  printf("\n");
+  regex_destroy(regex);
+
   regex = regex_create(config, "[a-zA-Z_][a-zA-Z0-9_]*");
   assert(regex_compile(regex, 0));
   regex_print_compiled_expr(regex);

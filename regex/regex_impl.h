@@ -23,12 +23,14 @@ typedef struct regex_node_t {
 typedef struct regex_t {
   int nunit;
   int ngroup;
+  int nclass;
   char *str;  /* owned */
   char *cur;
   const regex_config_t *config;
   regex_node_t *node;  /* owned */
   regex_node_t **units;
   regex_node_t **groups;
+  unsigned char *char_class;
 } regex_t;
 
 regex_node_t *regex_node_create(int id);
@@ -43,3 +45,4 @@ int parse_regex_class_escaped_unit(regex_t *, charset_t *);
 
 void regex_build_index(regex_t *);
 void regex_compute_poses(regex_t *);
+void regex_make_char_class(regex_t *);

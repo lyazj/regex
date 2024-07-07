@@ -11,18 +11,21 @@ regex_t *regex_create(const regex_config_t *config, const char *s)
   regex_t *regex = (regex_t *)Malloc(sizeof *regex);
   regex->nunit = 0;
   regex->ngroup = 0;
+  regex->nclass = 0;
   regex->str = Strdup(s);
   regex->cur = regex->str;
   regex->config = config;
   regex->node = NULL;
   regex->units = NULL;
   regex->groups = NULL;
+  regex->char_class = NULL;
   return regex;
 }
 
 void regex_destroy(regex_t *regex)
 {
   if(regex == NULL) return;
+  Free(regex->char_class);
   Free(regex->groups);
   Free(regex->units);
   regex_node_destroy(regex->node);
@@ -39,6 +42,7 @@ int regex_compile(regex_t *regex, int flags)
 
   regex_build_index(regex);
   regex_compute_poses(regex);
+  regex_make_char_class(regex);
   return 1;
 }
 
@@ -87,6 +91,22 @@ void regex_print_poses(const regex_t *regex)
     bitset_print(&regex->units[i]->lastpos);
     printf("\tfollowpos=");
     bitset_print(&regex->units[i]->followpos);
+    printf("\n");
+  }
+}
+
+void regex_print_char_class(const regex_t *regex)
+{
+  charset_t s;
+  for(int i = 0; i < regex->nclass; ++i) {
+    charset_empty(&s);
+    for(unsigned u = 0; u < 256; ++u) {
+      if(regex->char_class[u] == i) {
+        charset_set(&s, u);
+      }
+    }
+    printf("%d\t", i);
+    charset_print(&s);
     printf("\n");
   }
 }
