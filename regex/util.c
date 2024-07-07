@@ -16,6 +16,13 @@ void *Malloc(size_t n)
   return ptr;
 }
 
+void *Calloc(size_t n, size_t s)
+{
+  void *ptr = Malloc(n * s);
+  memset(ptr, 0, n * s);
+  return ptr;
+}
+
 char *Strdup(const char *s)
 {
   size_t len;
