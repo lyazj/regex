@@ -60,6 +60,8 @@ void regex_print_poses(const regex_t *);
 void regex_print_char_class(const regex_t *);
 void regex_print_states(const regex_t *);
 void regex_print_states_mermaid(const regex_t *);
+void regex_print_mstates(const regex_t *);
+void regex_print_mstates_mermaid(const regex_t *);
 
 void regex_config_add_escaping(regex_config_t *, unsigned char, const charset_t *);
 void regex_config_add_escaping_ch(regex_config_t *, unsigned char, unsigned char);

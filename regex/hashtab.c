@@ -30,13 +30,19 @@ hashtab_t *hashtab_create(size_t s, size_t n, hashfunc_t *h, equfunc_t *e)
 
 void hashtab_destroy(hashtab_t *tab)
 {
+  hashtab_clear(tab);
+  Free(tab->bucket);
+  Free(tab);
+}
+
+void hashtab_clear(hashtab_t *tab)
+{
   for(size_t b = 0; b < tab->nbucket; ++b) {
     for(hashtab_node_t *node = tab->bucket[b], *next; node; node = next) {
       next = node->next; Free(node);
     }
+    tab->bucket[b] = NULL;
   }
-  Free(tab->bucket);
-  Free(tab);
 }
 
 int hashtab_insert(hashtab_t *tab, const void *data, void **addr)

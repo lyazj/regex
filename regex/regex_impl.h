@@ -25,6 +25,7 @@ struct regex_t {
   int ngroup;
   int nclass;
   int nstate;
+  int nmstate;
   char *str;  /* owned */
   char *cur;
   const regex_config_t *config;
@@ -35,6 +36,7 @@ struct regex_t {
   unsigned char *class_char;
   bitset_t *states;
   int **state_trans;  /* [state][input] */
+  int **mstate_trans;
 };
 
 regex_node_t *regex_node_create(int id);
@@ -51,3 +53,4 @@ void regex_build_index(regex_t *);
 void regex_compute_poses(regex_t *);
 void regex_make_char_class(regex_t *);
 void regex_make_states(regex_t *);
+void regex_minimize_states(regex_t *);

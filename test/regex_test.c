@@ -24,6 +24,14 @@ int main(void)
   printf("\n");
   regex_destroy(regex);
 
+  regex = regex_create(config, "[]");
+  assert(regex_compile(regex, 0));
+  regex_print_compiled_expr(regex);
+  printf("\n");
+  regex_print_poses(regex);
+  printf("\n");
+  regex_destroy(regex);
+
   regex = regex_create(config, "[.]");
   assert(regex_compile(regex, 0));
   regex_print_compiled_expr(regex);
@@ -134,6 +142,7 @@ int main(void)
   regex_print_compiled_expr(regex);
   regex_print_poses(regex);
   regex_print_states_mermaid(regex);
+  regex_print_mstates_mermaid(regex);
   printf("\n");
   regex_destroy(regex);
 

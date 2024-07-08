@@ -27,12 +27,16 @@ void regex_make_states(regex_t *regex)
     bitset_empty(&state.state);
     bitset_set(&state.state, 0);
   }
-  state.id = regex->nstate++;
-  state.trans = (int *)Malloc((regex->nclass + 1) * sizeof *state.trans);
-  hashtab_insert(tab, &state, (void **)&addr);
 
-  /* Derive subsequent states. */
-  regex_make_states_recursion(regex, addr, tab);
+  /* Avoid involving dead state. */
+  if(bitset_get_first(&state.state, &s)) {  /* non-empty */
+    state.id = regex->nstate++;
+    state.trans = (int *)Malloc((regex->nclass + 1) * sizeof *state.trans);
+    hashtab_insert(tab, &state, (void **)&addr);
+
+    /* Derive subsequent states. */
+    regex_make_states_recursion(regex, addr, tab);
+  }
 
   /* Store results. */
   regex->states = (bitset_t *)Malloc(regex->nstate * sizeof(*regex->states));
@@ -70,7 +74,7 @@ void regex_make_states_recursion(regex_t *regex, regex_state_t *state, hashtab_t
     bitset_empty(&dest.state);
     if(bitset_get_first(&state->state, &from_node_id)) do {
       if(from_node_id == 0) {
-        state->trans[regex->nclass] = state->id;  /* accepting */
+        state->trans[regex->nclass] = 0;  /* [TODO] Use this value to distinguish candidates. */
         continue;
       }
       if(charset_test(&regex->units[from_node_id]->charset, uc)) {

@@ -110,6 +110,25 @@ int bitset_get_next(const bitset_t *s, size_t *up)
   return 0;
 }
 
+static size_t count_zero64(uint64_t u)
+{
+  size_t c = 0;
+  while(u) ++c, u ^= u & -u;
+  return c;
+}
+
+size_t bitset_count(const bitset_t *s)
+{
+  size_t n64 = s->n / 64, m64 = s->n % 64, c = 0;
+  if(m64) {
+    c = count_zero64(s->data[n64] & (((uint64_t)1 << m64) - 1));
+  } else {
+    c = 0;
+  }
+  while(n64) c += count_zero64(s->data[--n64]);
+  return c;
+}
+
 void bitset_print(const bitset_t *s)
 {
   size_t u;

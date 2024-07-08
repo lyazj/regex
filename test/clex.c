@@ -39,7 +39,7 @@ int main(void)
       fprintf(stderr, "ERROR: error compiling regex\n");
       return 1;
     }
-    regex_print_states_mermaid(regex);
+    regex_print_mstates_mermaid(regex);
     regex_destroy(regex);
   }
 
@@ -56,7 +56,7 @@ int main(void)
       fprintf(stderr, "ERROR: error compiling regex\n");
       return 1;
     }
-    regex_print_states_mermaid(regex);
+    regex_print_mstates_mermaid(regex);
     regex_destroy(regex);
   }
 
@@ -78,7 +78,7 @@ int main(void)
       fprintf(stderr, "ERROR: error compiling regex\n");
       return 1;
     }
-    regex_print_states_mermaid(regex);
+    regex_print_mstates_mermaid(regex);
     regex_destroy(regex);
   }
 
