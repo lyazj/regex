@@ -89,7 +89,8 @@ int hashtab_get_next(const hashtab_t *tab, void **addr, size_t *bp)
   while(node == NULL && ++b < tab->nbucket) {
     node = tab->bucket[b];
   }
+  if(node == NULL) return 0;
   *addr = NODE_DATA(node);
   *bp = b;
-  return node != NULL;
+  return 1;
 }
