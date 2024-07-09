@@ -2,6 +2,7 @@
 #include "regex.h"
 #include "charset.h"
 #include "bitset.h"
+#include <stdio.h>
 
 struct regex_config_t {
   charset_t escape[256];
@@ -40,6 +41,20 @@ struct regex_t {
   bitset_t *states;
   int **state_trans;  /* [state][input] */
   int **mstate_trans;
+};
+
+struct regex_lexer_t {
+  const regex_t *regex;
+  FILE *file;
+  size_t line;
+  size_t column;
+  char *f_buf;       /* forward buffer */
+  size_t f_buf_len;
+  char *f_cur;
+  char *b_buf;       /* backward buffer */
+  size_t b_buf_len;
+  char *b_cur;
+  regex_lexeme_t lexeme;
 };
 
 regex_node_t *regex_node_create(int id);

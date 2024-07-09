@@ -30,6 +30,7 @@ hashtab_t *hashtab_create(size_t s, size_t n, hashfunc_t *h, equfunc_t *e)
 
 void hashtab_destroy(hashtab_t *tab)
 {
+  if(tab == NULL) return;
   hashtab_clear(tab);
   Free(tab->bucket);
   Free(tab);

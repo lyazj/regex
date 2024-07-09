@@ -20,6 +20,7 @@ regex_config_t *regex_config_create(void)
 
 void regex_config_destroy(regex_config_t *config)
 {
+  if(config == NULL) return;
   Free(config);
 }
 

@@ -23,6 +23,20 @@ void *Calloc(size_t n, size_t s)
   return ptr;
 }
 
+void *Realloc(void *ptr, size_t s)
+{
+  if(s == 0) {
+    free(ptr);
+    return NULL;
+  }
+  ptr = realloc(ptr, s);
+  if(ptr == NULL) {
+    perror("realloc");
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
 char *Strdup(const char *s)
 {
   size_t len;
