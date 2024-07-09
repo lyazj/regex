@@ -9,14 +9,14 @@ const char *patterns[] = {  /* Covers only most-used C lexical features. */
   /* comment */                     "//[^\\n]*",
   /* comment */                     "/[*]" "([^*]|[*]+[^*/])*" "[*]+/",
   /* identifier */                  "[a-zA-Z_][a-zA-Z0-9_]*",
-  /* decimal integer */             "(0|[1-9][0-9]*)",
-  /* octet integer */               "0[0-7]+",
-  /* hexadecimal integer */         "0[xX][0-9a-fA-F]+",
-  /* binary integer */              "0[bB][01]+",
-  /* decimal floating-point */      "(" "[0-9]+[eE][+\\-]?[0-9]+" "|" "([0-9]*\\.[0-9]+|[0-9]+\\.[0-9]*)([eE][+\\-]?[0-9]+)?" ")",
-  /* hexadecimal floating-point */  "(" "0[xX][0-9a-fA-F]+[pP][+\\-]?[0-9]+" "|" "0[xX]([0-9a-fA-F]*\\.[0-9a-fA-F]+|[0-9a-fA-F]+\\.[0-9a-fA-F]*)([pP][+\\-]?[0-9]+)?" ")",
-  /* character integer */           "'(" "[^'\\\\\\n]" "|" "\\\\[^\\n]" ")*'",
-  /* character array (string) */    "\"(" "[^\"\\\\\\n]" "|" "\\\\[^\\n]" ")*\"",
+  /* decimal integer */             "(0|[1-9][0-9]*)[uUlL]*",
+  /* octet integer */               "0[0-7]+[uUlL]*",
+  /* hexadecimal integer */         "0[xX][0-9a-fA-F]+[uUlL]*",
+  /* binary integer */              "0[bB][01]+[uUlL]*",
+  /* decimal floating-point */      "(" "[0-9]+[eE][+\\-]?[0-9]+" "|" "(\\.[0-9]+|[0-9]+\\.[0-9]*)([eE][+\\-]?[0-9]+)?" ")[fFlL]*",
+  /* hexadecimal floating-point */  "0[xX](\\.[0-9a-fA-F]+|[0-9a-fA-F]+(\\.[0-9a-fA-F]*)?)[pP][+\\-]?[0-9]+[fFlL]*",
+  /* character integer */           "L?'(" "[^'\\\\\\n]" "|" "\\\\[^\\n]" ")*'",
+  /* character array (string) */    "L?\"(" "[^\"\\\\\\n]" "|" "\\\\[^\\n]" ")*\"",
   /* punctuations */
   "!", "%", "&", "\\(", "\\)", "\\*", "\\+", ",", "-", "\\.", "/", ":", ";", "<", "=", ">", "\\?", "\\[", "\\]", "^", "{", "\\|", "}", "~", 
   "\\+\\+", "--", "<<", ">>", "==", "&&", "\\|\\|", 
@@ -72,6 +72,27 @@ int main(void)
       if(p != q) strcat(buf, "|");
       strcat(buf, *p);
       if(strcmp(*p, "while") == 0) break;
+    }
+    regex = regex_create(config, buf);
+    if(regex_compile(regex, 0) == 0) {
+      fprintf(stderr, "ERROR: error compiling regex\n");
+      return 1;
+    }
+    regex_print_mstates_mermaid(regex);
+    regex_destroy(regex);
+  }
+
+  /* for all integers */
+  {
+    const char **q;
+    for(q = patterns; *q; ++q) {
+      if(strcmp(*q, "(0|[1-9][0-9]*)[uUlL]*") == 0) break;
+    }
+
+    buf[0] = '\0';
+    for(int i = 0; i < 4; ++i) {
+      if(i) strcat(buf, "|");
+      strcat(buf, q[i]);
     }
     regex = regex_create(config, buf);
     if(regex_compile(regex, 0) == 0) {
