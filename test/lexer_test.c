@@ -1,30 +1,7 @@
+#include "clex.h"
 #include "regex/regex.h"
 #include <stdio.h>
 #include <string.h>
-
-const char *patterns[] = {  /* Covers only most-used C lexical features. */
-  /* white spaces */                "[ \\f\\n\\r\\t\\v]",
-  /* keywords */
-  "auto", "break", "case", "char", "const", "continue", "default", "do", "double", "else", "enum", "extern", "float", "for", "goto", "if", "inline", "int", "long", "register", "restrict", "return", "short", "signed", "sizeof", "static", "struct", "switch", "typedef", "union", "unsigned", "void", "volatile", "while",
-  /* directive */                   "#[^\\n]*",
-  /* comment */                     "//[^\\n]*",
-  /* comment */                     "/[*]" "([^*]|[*]+[^*/])*" "[*]+/",
-  /* identifier */                  "[a-zA-Z_][a-zA-Z0-9_]*",
-  /* decimal integer */             "(0|[1-9][0-9]*)[uUlL]*",
-  /* octet integer */               "0[0-7]+[uUlL]*",
-  /* hexadecimal integer */         "0[xX][0-9a-fA-F]+[uUlL]*",
-  /* binary integer */              "0[bB][01]+[uUlL]*",
-  /* decimal floating-point */      "(" "[0-9]+[eE][+\\-]?[0-9]+" "|" "(\\.[0-9]+|[0-9]+\\.[0-9]*)([eE][+\\-]?[0-9]+)?" ")[fFlL]*",
-  /* hexadecimal floating-point */  "0[xX](\\.[0-9a-fA-F]+|[0-9a-fA-F]+(\\.[0-9a-fA-F]*)?)[pP][+\\-]?[0-9]+[fFlL]*",
-  /* character integer */           "L?'(" "[^'\\\\\\n]" "|" "\\\\[^\\n]" ")*'",
-  /* character array (string) */    "L?\"(" "[^\"\\\\\\n]" "|" "\\\\[^\\n]" ")*\"",
-  /* punctuations */
-  "!", "%", "&", "\\(", "\\)", "\\*", "\\+", ",", "-", "\\.", "/", ":", ";", "<", "=", ">", "\\?", "\\[", "\\]", "^", "{", "\\|", "}", "~",
-  "\\+\\+", "--", "<<", ">>", "==", "&&", "\\|\\|",
-  "<=", ">=", "!=", "\\+=", "-=", "\\*=", "/=", "%=", "&=", "^=", "\\|=", "<<=", ">>=",
-  "->", "\\.\\.\\.",
-  NULL,
-};
 
 int main(void)
 {
