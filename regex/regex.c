@@ -5,12 +5,14 @@
 #include <string.h>
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 regex_t *regex_create(const regex_config_t *config, const char *s)
 {
   regex_t *regex = (regex_t *)Malloc(sizeof *regex);
   regex->nunit = 0;
   regex->ngroup = 0;
+  regex->ncand = 0;
   regex->nclass = 0;
   regex->nstate = 0;
   regex->nmstate = 0;
@@ -96,6 +98,12 @@ void regex_print_poses(const regex_t *regex)
     printf("\tlastpos=");
     bitset_print(&regex->node->lastpos);
     printf("\n");
+  } else {
+    printf("0\tnullable=%d\tfirstpos=", 1);
+    printf("[]");
+    printf("\tlastpos=");
+    printf("[]");
+    printf("\n");
   }
   for(int i = 1; i <= regex->nunit; ++i) {
     printf("%d\t", i);
@@ -178,7 +186,7 @@ static void regex_print_states_or_mstates_mermaid(const regex_t *regex, int m)
       printf("\" --> %d\n", state_trans[i][j]);
     }
     if(state_trans[i][regex->nclass] >= 0) {
-      printf("%d(\"%d#\")\n", i, i);
+      printf("%d(\"%d#%d\")\n", i, i, state_trans[i][regex->nclass]);
     }
   }
   printf("```\n");
@@ -214,6 +222,7 @@ int parse_regex(regex_t *regex)
     regex->node = NULL;
     return 1;
   }
+  if(regex->ncand == 0) regex->ncand = 1;  /* init */
 
   for(;;) {
     if(!parse_regex_term(regex)) return 0;
@@ -231,6 +240,7 @@ int parse_regex(regex_t *regex)
       regex_node_destroy(first_node);
       return 0;
     }
+    if(regex->ncand > 0 /* unfrozen */) ++regex->ncand;
   }
 }
 
@@ -274,19 +284,25 @@ int parse_regex_reusable(regex_t *regex)
   if(!parse_regex_unit(regex, &s)) return 0;
 
   regex->node = regex_node_create(++regex->nunit);
+  regex->node->cand_id = abs(regex->ncand) - 1;
   regex->node->charset = s;
   return 1;
 }
 
 int parse_regex_group(regex_t *regex)
 {
+  int ncand_frozen;
   regex_node_t *node;
 
   if(!parse_regex_char(regex, '(')) return 0;
+  ncand_frozen = regex->ncand < 0;
+  if(!ncand_frozen) regex->ncand = -regex->ncand;  /* freeze candidate number */
   if(!parse_regex(regex)) return 0;
+  if(!ncand_frozen) regex->ncand = -regex->ncand;  /* unfreeze candidate number */
   if(!parse_regex_char(regex, ')')) return 0;
 
   node = regex_node_create(-++regex->ngroup);
+  node->cand_id = abs(regex->ncand) - 1;
   node->group = regex->node;
   regex->node = node;
   return 1;

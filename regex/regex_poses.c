@@ -105,6 +105,7 @@ void regex_compute_node_poses(regex_t *regex, regex_node_t *node)
   }
 
   /* Consider union. */
+  node->this_cand_nullable = node->nullable;
   if(node->next_cand) {
     regex_compute_node_poses(regex, node->next_cand);
     bitset_union(&node->firstpos, &node->next_cand->firstpos, &node->firstpos);

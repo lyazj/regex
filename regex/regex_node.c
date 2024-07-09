@@ -7,8 +7,10 @@ regex_node_t *regex_node_create(int id)
 {
   regex_node_t *node = (regex_node_t *)Malloc(sizeof *node);
   node->id = id;
+  node->cand_id = 0;
   node->type = 0;
   node->nullable = 0;
+  node->this_cand_nullable = 0;
   /* node->charset uninitialized */
   node->next_cand = NULL;
   node->next_node = NULL;

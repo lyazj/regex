@@ -9,8 +9,10 @@ struct regex_config_t {
 
 typedef struct regex_node_t {
   int id;
+  int cand_id;
   char type;  /* "*" | "+" | "?" */
   char nullable;
+  char this_cand_nullable;
   charset_t charset;
   struct regex_node_t *next_cand;  /* regex "|" term */
   struct regex_node_t *next_node;  /* term factor */
@@ -23,6 +25,7 @@ typedef struct regex_node_t {
 struct regex_t {
   int nunit;
   int ngroup;
+  int ncand;
   int nclass;
   int nstate;
   int nmstate;

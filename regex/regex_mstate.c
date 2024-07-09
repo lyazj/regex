@@ -38,7 +38,6 @@ void regex_minimize_states(regex_t *regex)
   state_class_trans_t trans, *addr;
   size_t hs;  /* for iteration on hashtab */
 
-  if(regex->node == NULL) return;  /* Empty, 1 state, already minimized. */
   tab = hashtab_create(sizeof(state_class_trans_t), 97,
       (hashfunc_t *)state_class_trans_hash, (equfunc_t *)state_class_trans_equ);
 
